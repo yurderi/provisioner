@@ -42,3 +42,40 @@ hosts:
     default: true
     root: /var/www/www.yurderi.de
 ```
+
+### Result
+```html
+<VirtualHost *:80>
+    DocumentRoot /var/www/www.yurderi.de
+    ServerName www.yurderi.de
+    ServerAlias *
+
+    <Directory /var/www/www.yurderi.de>
+        AllowOverride All
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    RewriteEngine on
+    RewriteRule ^ https://www.yurderi.de%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+<IfModule mod_ssl.c>
+    <VirtualHost *:443>
+        DocumentRoot /var/www/www.yurderi.de
+        ServerName www.yurderi.de
+
+        <Directory /var/www/www.yurderi.de>
+            AllowOverride All
+        </Directory>
+        
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        SSLCertificateFile /etc/letsencrypt/live/www.yurderi.de/fullchain.pem
+        SSLCertificateKeyFile /etc/letsencrypt/live/www.yurderi.de/privkey.pem
+        Include /etc/letsencrypt/options-ssl-apache.conf
+    </VirtualHost>
+</IfModule>
+```
