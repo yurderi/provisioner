@@ -76,18 +76,18 @@ class Provisioner implements ProvisionerInterface
                 $this->writeHost($host, $hostConfig, $host === $hostname);
             }
         }
-        
-        $this->output->writeln('Reloading apache...');
+    }
+    
+    protected function reloadApache ()
+    {
         `service apache2 reload`;
-        
-        $this->output->writeln('Obtaining ssl certificates...');
-        // Apply ssl configurations
-        foreach ($this->sslQueue as $hostname)
-        {
-            $command = sprintf('certbot certonly --apache -n -d %s', $hostname);
-            
-            `$command`;
-        }
+    }
+    
+    protected function obtainCertificate ($hostname)
+    {
+        $command = sprintf('certbot certonly --apache -n -d %s', $hostname);
+    
+        `$command`;
     }
     
     /**
@@ -121,7 +121,7 @@ class Provisioner implements ProvisionerInterface
             'serverName'     => $hostname,
             'rules'          => $data['rules'],
             'additionalText' => '',
-            'ssl'            => $data['ssl']
+            'ssl'            => false
         ]);
         
         file_put_contents($confFilename, $content);
@@ -140,7 +140,19 @@ class Provisioner implements ProvisionerInterface
         // Configure ssl
         if ($data['ssl'])
         {
-            $this->sslQueue[] = $hostname;
+            $this->reloadApache();
+            $this->obtainCertificate($hostname);
+    
+            $content = $twig->render('vhost.twig', [
+                'default'        => $isMain && $data['default'],
+                'documentRoot'   => $data['root'],
+                'serverName'     => $hostname,
+                'rules'          => $data['rules'],
+                'additionalText' => '',
+                'ssl'            => true
+            ]);
+    
+            file_put_contents($confFilename, $content);
         }
     }
     
