@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+$loader  = require_once __DIR__ . '/../vendor/autoload.php';
+$console = new \Symfony\Component\Console\Application('Yurderi Provisioner');
+
+$console->addCommands([
+    new \Yurderi\Provisioner\Commands\RunCommand()
+]);
+
+$console->run();
