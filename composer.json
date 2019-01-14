@@ -13,5 +13,8 @@
         "psr-4": {
             "Yurderi\\Provisioner\\": "src/"
         }
-    }
+    },
+    "bin": [
+        "bin/yp"
+    ]
 }
