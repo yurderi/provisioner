@@ -1,4 +1,9 @@
 {
+    "name": "yurderi/provisioner",
+    "description": "A provisioner to configure apache hosts in a YAML file (supports SSL)",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "stable",
     "require": {
         "symfony/console": "^4.2",
         "symfony/yaml": "^4.2",
