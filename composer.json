@@ -1,7 +1,7 @@
 {
     "name": "yurderi/provisioner",
     "description": "A provisioner to configure apache hosts in a YAML file (supports SSL)",
-    "type": "project",
+    "type": "library",
     "license": "MIT",
     "minimum-stability": "stable",
     "require": {
